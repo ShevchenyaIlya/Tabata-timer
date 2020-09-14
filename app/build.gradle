@@ -33,6 +33,7 @@ android {
         targetSdkVersion 30
         versionCode generateVersionCode(tag)
         versionName tag.replace("\n", "")
+        println versionCode
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -44,8 +45,6 @@ android {
         }
     }
 }
-
-println versionCode
 
 def getGitCommand = { ->
     def stdout = new ByteArrayOutputStream()
