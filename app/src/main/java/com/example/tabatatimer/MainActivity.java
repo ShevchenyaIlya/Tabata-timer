@@ -3,60 +3,27 @@ package com.example.tabatatimer;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    public class Obj {
-        public String title;
-        public String description;
-        public Obj(String title, String description) {
-            this.title = title;
-            this.description = description;
-        }
-    }
-
-    public class ObjAdapter extends ArrayAdapter<Obj> {
-
-        private Context context;
-        private ArrayList<Obj> items;
-
-        public ObjAdapter(Context context, int layoutResId, ArrayList<Obj> data) {
-            super(context, layoutResId, data);
-            this.context = context;
-            this.items = data;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View v = convertView;
-            if (v == null) {
-                LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.custom_list_item, null);
-            }
-            Obj o = items.get(position);
-            if (o != null) {
-                TextView title = (TextView) v.findViewById(R.id.titleTextView);
-                TextView description = (TextView) v.findViewById(R.id.descriptionTextView);
-                if (title != null) {
-                    title.setText(o.title);
-                }
-                if (description != null) {
-                    description.setText(o.description);
-                }
-            }
-            return v;
-        }
-
-    }
     String[] title = { "Иван", "Марья", "Петр", "Антон", "Даша", "Борис",
             "Костя", "Игорь", "Анна", "Денис", "Андрей" };
 
@@ -71,12 +38,39 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ListView listView = (ListView) findViewById(R.id.lvMain);
-
-        ArrayList<Obj> items = new ArrayList<Obj>();
+//
+//        ArrayList<SequenceModel> items = new ArrayList<SequenceModel>();
+//        items.add(new SequenceModel(R.drawable.directions_walk, "Подготовка", "24"));
+//        items.add(new SequenceModel(R.drawable.directions_run, "Разминка", "12"));
+//        items.add(new SequenceModel(R.drawable.access_alarm, "Работа", "26"));
+//        items.add(new SequenceModel(R.drawable.accessibility, "Отдых", "30"));
+//        items.add(new SequenceModel(R.drawable.repeat, "Циклы", "50"));
+//        items.add(new SequenceModel(R.drawable.update, "Сеты", "50"));
+//        items.add(new SequenceModel(R.drawable.weekend, "Отдых между сетами", "50"));
+//        listView.setAdapter(new SequenceAdapter(items, this));
+        ArrayList<DataModel> items = new ArrayList<DataModel>();
         for (int i = 0; i  < 7; i++) {
-            items.add(new Obj(title[i], description[i]));
+            items.add(new DataModel(title[i], description[i]));
         }
 
-        listView.setAdapter(new ObjAdapter(this, R.layout.custom_list_item, items));
+        listView.setAdapter(new CustomAdapter(items, this));
+
+        FloatingActionButton fab = findViewById(R.id.tab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+
     }
+
+//    protected void listItemOnClickHandler(@NotNull View view) {
+//        LinearLayout parentRow = (LinearLayout)view.getParent();
+//        ImageButton btnClick = (ImageButton) parentRow.getChildAt(0);
+//        parentRow.setBackgroundColor(Color.CYAN);
+//        parentRow.refreshDrawableState();
+//
+//    }
 }
