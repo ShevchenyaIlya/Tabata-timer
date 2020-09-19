@@ -12,7 +12,10 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"></activity>
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainActivity">
+
+        </activity>
         <activity
             android:name=".SplashScreen"
             android:theme="@style/SplashTheme">
@@ -23,6 +26,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".SequenceActivity"
+            android:parentActivityName=".MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
