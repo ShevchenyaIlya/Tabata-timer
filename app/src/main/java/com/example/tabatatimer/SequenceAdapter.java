@@ -1,33 +1,27 @@
 package com.example.tabatatimer;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class SequenceAdapter extends ArrayAdapter<SequenceModel> implements View.OnClickListener{
+public class SequenceAdapter extends ArrayAdapter<SequenceControllerModel> implements View.OnClickListener{
 
     private Context context;
-    private ArrayList<SequenceModel> rowElements = new ArrayList<SequenceModel>();
+    private ArrayList<SequenceControllerModel> rowElements = new ArrayList<SequenceControllerModel>();
 
-    public SequenceAdapter(ArrayList<SequenceModel> items, Context context) {
+    public SequenceAdapter(ArrayList<SequenceControllerModel> items, Context context) {
         super(context, R.layout.create_sequence_list_item, items);
         this.context = context;
         this.rowElements = items;
@@ -43,7 +37,7 @@ public class SequenceAdapter extends ArrayAdapter<SequenceModel> implements View
             view = inflater.inflate(R.layout.create_sequence_list_item, null);
         }
 
-        final SequenceModel rowData = getItem(position);
+        final SequenceControllerModel rowData = getItem(position);
 
         if (rowData != null) {
             TextView title = (TextView) view.findViewById(R.id.sequenceItemTitle);
@@ -62,38 +56,38 @@ public class SequenceAdapter extends ArrayAdapter<SequenceModel> implements View
                 image.setImageResource(rowData.getActivityImage());
             }
 
-            ImageView addValue = (ImageView) view.findViewById(R.id.addValue);
-            addValue.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int number = Integer.parseInt(value.getText().toString());
-                    rowData.setBaseValue(String.valueOf(number + 1));
-                    value.setText(String.valueOf(number + 1));
-                }
-            });
+        ImageView addValue = (ImageView) view.findViewById(R.id.addValue);
+        addValue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int number = Integer.parseInt(value.getText().toString());
+                rowData.setBaseValue(String.valueOf(number + 1));
+                value.setText(String.valueOf(number + 1));
+            }
+        });
 
-            ImageView deleteValue = (ImageView) view.findViewById(R.id.deleteValue);
-            deleteValue.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int number = Integer.parseInt(value.getText().toString());
-                    rowData.setBaseValue(String.valueOf(number - 1));
-                    value.setText(String.valueOf(number - 1));
-                }
-            });
+        ImageView deleteValue = (ImageView) view.findViewById(R.id.deleteValue);
+        deleteValue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int number = Integer.parseInt(value.getText().toString());
+                rowData.setBaseValue(String.valueOf(number - 1));
+                value.setText(String.valueOf(number - 1));
+            }
+        });
 
-            value.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        value.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
-                @Override
-                public void afterTextChanged(Editable editable) {
-                    rowData.setBaseValue(value.getText().toString());
-                }
-            });
+            @Override
+            public void afterTextChanged(Editable editable) {
+                rowData.setBaseValue(value.getText().toString());
+            }
+        });
 //            Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
 //            String[] spinnerItem = new String[] {"Title", "Color"};
 //            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, spinnerItem);;
@@ -117,6 +111,6 @@ public class SequenceAdapter extends ArrayAdapter<SequenceModel> implements View
 
     @Override
     public void onClick(View view) {
-
+        //Toast.makeText(view.getContext(), String.valueOf(view.getId()), Toast.LENGTH_LONG).show();
     }
 }

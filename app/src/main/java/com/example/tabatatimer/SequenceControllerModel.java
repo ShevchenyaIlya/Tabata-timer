@@ -1,11 +1,11 @@
 package com.example.tabatatimer;
 
-public class SequenceModel {
+public class SequenceControllerModel {
     private int activityImage;
     private String title;
     private String baseValue;
 
-    public SequenceModel(int activityImage, String title, String baseValue) {
+    public SequenceControllerModel(int activityImage, String title, String baseValue) {
         this.activityImage = activityImage;
         this.title = title;
         this.baseValue = baseValue;
