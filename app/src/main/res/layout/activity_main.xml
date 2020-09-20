@@ -38,9 +38,10 @@
         android:onClick="floatingButtonClick"
         android:clickable="true"
         android:elevation="4dp"
+        android:focusable="true"
         android:contentDescription="@string/create"
         android:background="@android:color/black"
         android:layout_margin="15dp"
-        android:focusable="true" />
+        />
 
 </FrameLayout>

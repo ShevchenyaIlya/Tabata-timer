@@ -31,4 +31,5 @@
     <string name="your_trainings">Ваши тренировки:</string>
     <string name="training_name">Название тренировки</string>
     <string name="list_item_configurations">List item configurations</string>
+    <string name="start">START</string>
 </resources>

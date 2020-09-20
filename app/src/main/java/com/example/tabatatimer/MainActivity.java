@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
@@ -43,7 +44,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         dbHelper = new DatabaseHelper(this);
+        //dbHelper.insertData("First training", 10, 30, 4, 45, 4, 20, 8, 1, 60);
+        //dbHelper.updateData(1, "Second", 10, 30, 4, 45, 4, 20, 8, 1, 60);
+        dbHelper.deleteData(String.valueOf(2));
 
+        Cursor cursor = dbHelper.getAllData();
+        WorkoutModel training;
+//        while (cursor.moveToNext()) {
+        cursor.moveToNext();
+        training = new WorkoutModel(cursor.getInt(0), cursor.getString(1), cursor.getInt(2),
+                cursor.getInt(3), cursor.getInt(4), cursor.getInt(5),
+                cursor.getInt(6), cursor.getInt(7), cursor.getInt(8),
+                cursor.getInt(9), cursor.getInt(10));
+//        }
         ListView listView = (ListView) findViewById(R.id.lvMain);
 
 
