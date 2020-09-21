@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.media.Image;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,59 +28,44 @@ import com.google.android.material.snackbar.Snackbar;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     DatabaseHelper dbHelper;
-    String[] title = { "Иван", "Марья", "Петр", "Антон", "Даша", "Борис",
-            "Костя", "Игорь", "Анна", "Денис", "Андрей" };
-
-    String[] description = { "Иван, asdgfadgfhfghsafdasdgdafgdfgdfgfdsgsdgfdgsdfgsdfgdfgdsfgdsfggasdgfadgfhfghsafdasdgdafgdfgdfgfdsgsdgfdgsdfgsdfgdfgdsfgdsfggasdgfadgfhfghsafdasdgdafgdfgdfgfdsgsdgfdgsdfgsdfgdfgdsfgdsfggasdgfadgfhfghsafdasdgdafgdfgdfgfdsgsdgfdgsdfgsdfgdfgdsfgdsfgg", "Марья", "Петр", "Антон", "Даша", "Борис",
-            "Костя", "Игорь", "Анна", "Денис", "Андрей" };
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         dbHelper = new DatabaseHelper(this);
-        //dbHelper.insertData("First training", 10, 30, 4, 45, 4, 20, 8, 1, 60);
-        //dbHelper.updateData(1, "Second", 10, 30, 4, 45, 4, 20, 8, 1, 60);
-        dbHelper.deleteData(String.valueOf(2));
 
         Cursor cursor = dbHelper.getAllData();
-        WorkoutModel training;
-//        while (cursor.moveToNext()) {
-        cursor.moveToNext();
-        training = new WorkoutModel(cursor.getInt(0), cursor.getString(1), cursor.getInt(2),
-                cursor.getInt(3), cursor.getInt(4), cursor.getInt(5),
-                cursor.getInt(6), cursor.getInt(7), cursor.getInt(8),
-                cursor.getInt(9), cursor.getInt(10));
-//        }
-        ListView listView = (ListView) findViewById(R.id.lvMain);
-
-
-        ArrayList<DataModel> items = new ArrayList<DataModel>();
-        for (int i = 0; i  < 7; i++) {
-            items.add(new DataModel(title[i], description[i]));
+        final ArrayList<WorkoutModel> trainings = new ArrayList<WorkoutModel>();
+        while (cursor.moveToNext()) {
+            trainings.add(new WorkoutModel(cursor.getInt(0), cursor.getString(1), cursor.getInt(2),
+                    cursor.getInt(3), cursor.getInt(4), cursor.getInt(5), cursor.getInt(6),
+                    cursor.getInt(7), cursor.getInt(8), cursor.getString(9), cursor.getString(10)));
         }
 
-        listView.setAdapter(new CustomAdapter(items, this));
+        final ListView listView = (ListView) findViewById(R.id.lvMain);
+
+
+        listView.setAdapter(new CustomAdapter(trainings, this));
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(view.getContext(), String.valueOf(i), Toast.LENGTH_SHORT).show();
-//                setTimeDialog(i);
+                Toast.makeText(view.getContext(), "Opening " + trainings.get(i).getWorkout_name(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(view.getContext(), SequenceActivity.class);
+                intent.putExtra("SEQUENCE", trainings.get(i));
+                startActivity(intent);
             }
         });
 
     }
 
     public void floatingButtonClick(View view) {
-//        Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show();
         Intent intent = new Intent(this, SequenceActivity.class);
         startActivity(intent);
     }

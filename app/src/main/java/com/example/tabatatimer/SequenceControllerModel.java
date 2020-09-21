@@ -1,11 +1,13 @@
 package com.example.tabatatimer;
 
-public class SequenceControllerModel {
+import java.io.Serializable;
+
+public class SequenceControllerModel implements Serializable {
     private int activityImage;
     private String title;
-    private String baseValue;
+    private Integer baseValue;
 
-    public SequenceControllerModel(int activityImage, String title, String baseValue) {
+    public SequenceControllerModel(int activityImage, String title, Integer baseValue) {
         this.activityImage = activityImage;
         this.title = title;
         this.baseValue = baseValue;
@@ -27,11 +29,11 @@ public class SequenceControllerModel {
         this.title = title;
     }
 
-    public String getBaseValue() {
+    public Integer getBaseValue() {
         return baseValue;
     }
 
-    public void setBaseValue(String baseValue) {
+    public void setBaseValue(Integer baseValue) {
         this.baseValue = baseValue;
     }
 }
