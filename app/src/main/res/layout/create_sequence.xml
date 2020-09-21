@@ -18,15 +18,15 @@
         android:textSize="20sp"
         android:text="@string/training_name"/>
 
-    <EditText
-        android:id="@+id/programName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        android:autofillHints="Введите название"
-        android:inputType="textAutoCorrect"
-        android:labelFor="@+id/training_name"/>
+<!--    <EditText-->
+<!--        android:id="@+id/programName"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textSize="18sp"-->
+<!--        android:autofillHints="Введите название"-->
+<!--        android:inputType="textAutoCorrect"-->
+<!--        android:labelFor="@+id/training_name"/>-->
 
     <ListView
         android:id="@+id/sequenceListView"
@@ -50,6 +50,7 @@
             android:src="@drawable/ic_baseline_format_list_bulleted_24"
             android:clickable="true"
             android:elevation="4dp"
+            android:onClick="toListOfSequences"
             android:focusable="true"/>
         <Button
             android:layout_width="match_parent"
@@ -73,6 +74,7 @@
             android:src="@drawable/add_box"
             android:clickable="true"
             android:elevation="4dp"
-            android:focusable="true"/>
+            android:focusable="true"
+            android:onClick="toEditSequencePage"/>
     </LinearLayout>
 </LinearLayout>

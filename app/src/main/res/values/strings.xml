@@ -32,4 +32,6 @@
     <string name="training_name">Название тренировки</string>
     <string name="list_item_configurations">List item configurations</string>
     <string name="start">START</string>
+    <string name="save_changes">Save changes</string>
+    <string name="delete">Delete</string>
 </resources>
