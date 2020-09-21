@@ -10,6 +10,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".EditSequenceActivity"
+            android:parentActivityName=".SequenceActivity">
+
+        </activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
@@ -32,9 +36,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".SequenceActivity"
+        <activity
+            android:name=".SequenceActivity"
             android:parentActivityName=".MainActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
