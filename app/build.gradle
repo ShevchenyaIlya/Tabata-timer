@@ -12,11 +12,16 @@ def getLastTag() {
 
 static def generateVersionCode(String tag) {
     def last_version = tag.tokenize('-')[0]
+    def commit_number = tag.tokenize('-')[1]
+    if (commit_number != null)
+        commit_number = commit_number.toInteger()
+    else
+        commit_number = 0
     def versions = last_version.tokenize('.')
 
     def major = versions[0].toInteger()
     def minor = versions[1].toInteger()
-    def patch = versions[2].toInteger()
+    def patch = versions[2].toInteger() + commit_number
     def res = (major * 1000 + minor.toInteger()) * 100 + patch.toInteger()
     return res
 }
@@ -24,6 +29,14 @@ static def generateVersionCode(String tag) {
 def tag = getLastTag()
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('/home/shevchenya/AndroidStudioProjects/secret_key.jks')
+            storePassword 'Sheva07012001'
+            keyPassword 'Sheva07012001'
+            keyAlias 'upload'
+        }
+    }
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
 
@@ -34,9 +47,10 @@ android {
         targetSdkVersion 30
         versionCode generateVersionCode(tag)
         versionName tag.replace("\n", "")
-        println versionCode
+        println versionCode + "--------------------------------------------------------"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.debug
     }
 
     buildTypes {
