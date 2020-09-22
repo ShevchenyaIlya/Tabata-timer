@@ -2,6 +2,7 @@ package com.example.tabatatimer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class CustomAdapter extends BaseAdapter implements ListAdapter {
 
@@ -63,6 +66,9 @@ public class CustomAdapter extends BaseAdapter implements ListAdapter {
             if (description != null) {
                 description.setText(obj.getDescription());
             }
+//            view.setBackgroundColor(obj.getColor());
+            GradientDrawable backgroundGradient = (GradientDrawable)view.getBackground();
+            backgroundGradient.setColor(obj.getColor());
 //            Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
 //            String[] spinnerItem = new String[] {"Title", "Color"};
 //            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, spinnerItem);;
@@ -73,10 +79,7 @@ public class CustomAdapter extends BaseAdapter implements ListAdapter {
             startProgram.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    LinearLayout layout = (LinearLayout)view.getParent();
-                    LinearLayout parent = (LinearLayout)layout.getParent();
-                    GradientDrawable bgShape = (GradientDrawable)parent.getBackground();
-                    bgShape.setColor(Color.RED);
+
                 }
             });
 
@@ -93,7 +96,7 @@ public class CustomAdapter extends BaseAdapter implements ListAdapter {
         return view;
     }
 
-    public void showPopup(View v, final int position) {
+    public void showPopup(final View v, final int position) {
         PopupMenu popupMenu = new PopupMenu(context, v);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -104,13 +107,25 @@ public class CustomAdapter extends BaseAdapter implements ListAdapter {
                         getItem(position).deleteWorkout(dbHelper);
                         items.remove(position);
                         notifyDataSetChanged();
-//                        Intent intent = context.getIntent();
-//                        finish();
-//                        startActivity(intent);
                         return true;
-//                    case R.id.second_item:
-//                        Toast.makeText(context, "Second ", Toast.LENGTH_LONG).show();
-//                        return true;
+                    case R.id.second_item:
+                        final WorkoutModel obj = items.get(position);
+                        AmbilWarnaDialog colorPicker = new AmbilWarnaDialog(context, obj.getColor(), new AmbilWarnaDialog.OnAmbilWarnaListener() {
+                            @Override
+                            public void onCancel(AmbilWarnaDialog dialog) {
+
+                            }
+
+                            @Override
+                            public void onOk(AmbilWarnaDialog dialog, int color) {
+                                obj.setColor(color);
+                                DatabaseHelper dbHelper = new DatabaseHelper(context);
+                                obj.updateWorkout(dbHelper);
+                                notifyDataSetChanged();
+                            }
+                        });
+                        colorPicker.show();
+                        return true;
                     default:
                         return false;
                 }
