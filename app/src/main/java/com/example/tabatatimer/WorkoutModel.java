@@ -18,11 +18,10 @@ public class WorkoutModel implements Serializable {
     private ArrayList<String> workout_order;
     private ArrayList<Integer> workout_order_time;
     private String description;
-
-
+    private int color;
 
     // If id is equal to 0, then this object doesn't saved in database
-    public WorkoutModel(int id, String workout_name, int preparation_time, int stretch_time, int work_time, int relax_time, int cycles_number, int sets_number, int relax_after_set_time, String workout_order_value, String workout_order_time_value) {
+    public WorkoutModel(int id, String workout_name, int preparation_time, int stretch_time, int work_time, int relax_time, int cycles_number, int sets_number, int relax_after_set_time, String workout_order_value, String workout_order_time_value, int color) {
         this.id = id;
         this.workout_name = workout_name;
         this.preparation_time = preparation_time;
@@ -32,6 +31,7 @@ public class WorkoutModel implements Serializable {
         this.cycles_number = cycles_number;
         this.sets_number = sets_number;
         this.relax_after_set_time = relax_after_set_time;
+        this.color = color;
 
         if (workout_order_time_value.equals("") && workout_order_value.equals("")) {
             createWorkingOrder();
@@ -100,9 +100,18 @@ public class WorkoutModel implements Serializable {
         this.id = id;
     }
 
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+
     public boolean saveWorkout(DatabaseHelper dbHelper) {
         return dbHelper.insertData(this.workout_name, this.preparation_time, this.stretch_time,
-                this.work_time, this.relax_time, this.cycles_number, this.sets_number, this.relax_after_set_time, Converter.convertArrayToString(workout_order.toArray(new String[0])), Converter.convertIntArrayToString(workout_order_time.toArray(new Integer[0])));
+                this.work_time, this.relax_time, this.cycles_number, this.sets_number, this.relax_after_set_time, Converter.convertArrayToString(workout_order.toArray(new String[0])), Converter.convertIntArrayToString(workout_order_time.toArray(new Integer[0])), color);
     }
 
     public int deleteWorkout(DatabaseHelper dbHelper) {
@@ -113,7 +122,7 @@ public class WorkoutModel implements Serializable {
     public void updateWorkout(DatabaseHelper dbHelper) {
         dbHelper.updateData(this.id, this.workout_name, this.preparation_time, this.stretch_time,
                 this.work_time, this.relax_time, this.cycles_number, this.sets_number, this.relax_after_set_time,
-                Converter.convertArrayToString(workout_order.toArray(new String[0])), Converter.convertIntArrayToString(workout_order_time.toArray(new Integer[0])));
+                Converter.convertArrayToString(workout_order.toArray(new String[0])), Converter.convertIntArrayToString(workout_order_time.toArray(new Integer[0])), color);
     }
 
     private String createDescription() {

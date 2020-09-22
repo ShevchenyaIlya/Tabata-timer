@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         while (cursor.moveToNext()) {
             trainings.add(new WorkoutModel(cursor.getInt(0), cursor.getString(1), cursor.getInt(2),
                     cursor.getInt(3), cursor.getInt(4), cursor.getInt(5), cursor.getInt(6),
-                    cursor.getInt(7), cursor.getInt(8), cursor.getString(9), cursor.getString(10)));
+                    cursor.getInt(7), cursor.getInt(8), cursor.getString(9), cursor.getString(10), cursor.getInt(11)));
         }
 
         final ListView listView = (ListView) findViewById(R.id.lvMain);
