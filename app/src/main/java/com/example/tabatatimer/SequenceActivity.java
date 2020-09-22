@@ -30,17 +30,20 @@ public class SequenceActivity extends AppCompatActivity{
         setContentView(R.layout.create_sequence);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        ListView listView = (ListView) findViewById(R.id.sequenceListView);
         workout = (WorkoutModel) getIntent().getSerializableExtra("SEQUENCE");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ListView listView = (ListView) findViewById(R.id.sequenceListView);
         items = new ArrayList<SequenceControllerModel>();
         TextView text = (TextView) findViewById(R.id.training_name);
         ArrayList<Integer> baseValues;
         if (workout == null) {
             baseValues = new ArrayList<Integer>(Arrays.asList(30, 30, 30, 10, 4, 1, 60));
-            workout = new WorkoutModel(0, "Base name", 30, 30, 30, 10, 4, 1, 60, "", "");
-        }
-        else {
+            workout = new WorkoutModel(0, "Base name", 30, 30, 30, 10, 4, 1, 60, "", "", R.color.listItemColor);
+        } else {
             baseValues = new ArrayList<Integer>(Arrays.asList(workout.getPreparation_time(), workout.getStretch_time(),
                     workout.getWork_time(), workout.getRelax_time(), workout.getCycles_number(),
                     workout.getSets_number(), workout.getRelax_after_set_time()));
@@ -56,6 +59,15 @@ public class SequenceActivity extends AppCompatActivity{
         items.add(new SequenceControllerModel(R.drawable.weekend, "Отдых между сетами", baseValues.get(6)));
 
         listView.setAdapter(new SequenceAdapter(items, workout, this, ""));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data == null) {
+            return;
+        }
+        workout = (WorkoutModel) data.getSerializableExtra("SEQUENCE");
     }
 
 //    private void setTimeDialog(int itemIndex) {
@@ -102,6 +114,6 @@ public class SequenceActivity extends AppCompatActivity{
         workout.updateWorkingOrder();
 
         intent.putExtra("SEQUENCE", workout);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 }

@@ -3,11 +3,13 @@ package com.example.tabatatimer;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -21,12 +23,15 @@ public class EditSequenceActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_sequence);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
 
         dbHelper = new DatabaseHelper(this);
         ListView listView = (ListView) findViewById(R.id.editSequenceListView);
         workout = (WorkoutModel) getIntent().getSerializableExtra("SEQUENCE");
+
+
         EditText editText = (EditText) findViewById(R.id.editPageTextView);
         editText.setText(workout.getWorkout_name());
 
@@ -51,12 +56,20 @@ public class EditSequenceActivity extends AppCompatActivity {
         listView.setAdapter(new SequenceAdapter(items_order, workout, this, ""));
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, SequenceActivity.class);
+        intent.putExtra("SEQUENCE", workout);
+        setResult(RESULT_OK, intent);
+        super.onBackPressed();
+    }
     public void saveChangesButton(View view) {
         ArrayList<String> fazes = workout.getWorkout_order();
         ArrayList<Integer> fazes_time = workout.getWorkout_order_time();
         EditText editText = (EditText)findViewById(R.id.editPageTextView);
         workout.setWorkout_name(editText.getText().toString());
         workout.updateDescription();
+//        workout.setColor();
 
         for (int i = 0; i < fazes.size(); i++) {
             fazes.set(i, items_order.get(i).getTitle());
@@ -65,8 +78,10 @@ public class EditSequenceActivity extends AppCompatActivity {
 
         if (workout.getId() != 0)
             workout.updateWorkout(dbHelper);
-        else
-            workout.saveWorkout(dbHelper);
+        else {
+            boolean result = workout.saveWorkout(dbHelper);
+            Toast.makeText(this, "Sequence with such name exist", Toast.LENGTH_SHORT).show();
+        }
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
