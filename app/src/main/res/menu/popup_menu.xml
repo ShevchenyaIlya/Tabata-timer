@@ -2,6 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/first_item"
         android:title="@string/delete"/>
-<!--    <item android:id="@+id/second_item"-->
-<!--        android:title="Item2"/>-->
+    <item android:id="@+id/second_item"
+        android:title="@string/choose_color"/>
 </menu>
