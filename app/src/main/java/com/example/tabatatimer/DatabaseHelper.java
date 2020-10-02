@@ -20,7 +20,12 @@ public class DatabaseHelper extends SQLiteOpenHelper{
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, version);
         SQLiteDatabase db = this.getWritableDatabase();
+    }
 
+    public void dropTable() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_TRAINING);
+        onCreate(db);
     }
 
     @Override
