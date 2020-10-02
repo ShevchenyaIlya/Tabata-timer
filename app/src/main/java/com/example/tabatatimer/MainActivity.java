@@ -1,9 +1,14 @@
 package com.example.tabatatimer;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.PreferenceManager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.media.Image;
@@ -29,30 +34,55 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
     DatabaseHelper dbHelper;
+    public static float font_size;
+    public static String language;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean theme_style = preferences.getBoolean("app_theme", false);
+        if (theme_style) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+        language = preferences.getString("language", "en");
+        Configuration config = getBaseContext().getResources().getConfiguration();
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+        font_size = Float.parseFloat(preferences.getString("font", "10"));
         setContentView(R.layout.activity_main);
+
+        TextView textView = (TextView) findViewById(R.id.trainings);
+        textView.setTextSize(font_size);
         dbHelper = new DatabaseHelper(this);
 
         Cursor cursor = dbHelper.getAllData();
+
         final ArrayList<WorkoutModel> trainings = new ArrayList<WorkoutModel>();
         while (cursor.moveToNext()) {
             trainings.add(new WorkoutModel(cursor.getInt(0), cursor.getString(1), cursor.getInt(2),
                     cursor.getInt(3), cursor.getInt(4), cursor.getInt(5), cursor.getInt(6),
                     cursor.getInt(7), cursor.getInt(8), cursor.getString(9), cursor.getString(10), cursor.getInt(11)));
         }
-
+        for (int i = 0; i < trainings.size(); i++) {
+            WorkoutModel workoutModel = trainings.get(i);
+            workoutModel.updateDescription();
+            trainings.set(i, workoutModel);
+        }
         final ListView listView = (ListView) findViewById(R.id.lvMain);
 
 
         listView.setAdapter(new CustomAdapter(trainings, this));
-
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -72,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu (Menu menu) {
-        menu.add("Settings");
+        menu.add(R.string.settings);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -81,17 +111,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
 
-//        Toast.makeText(this, item.getTitle(), Toast.LENGTH_LONG).show();
-//        CharSequence title = item.getTitle();
-//        setWidgetsConfigurations(title);
         return super.onOptionsItemSelected(item);
     }
 
-//    protected void listItemOnClickHandler(@NotNull View view) {
-//        LinearLayout parentRow = (LinearLayout)view.getParent();
-//        ImageButton btnClick = (ImageButton) parentRow.getChildAt(0);
-//        parentRow.setBackgroundColor(Color.CYAN);
-//        parentRow.refreshDrawableState();
-//
-//    }
 }
