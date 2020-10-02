@@ -46,8 +46,11 @@ public class SequenceAdapter extends ArrayAdapter<SequenceControllerModel> imple
 
         if (rowData != null) {
             TextView title = (TextView) view.findViewById(R.id.sequenceItemTitle);
+            title.setTextSize(MainActivity.font_size);
             ImageView image = (ImageView) view.findViewById(R.id.sequenceItemImage);
             final EditText value = (EditText) view.findViewById(R.id.sequenceItemValue);
+            value.setTextSize(MainActivity.font_size);
+
             if (title != null) {
                 title.setText(rowData.getTitle());
             }

@@ -39,6 +39,7 @@ public class SequenceActivity extends AppCompatActivity{
         ListView listView = (ListView) findViewById(R.id.sequenceListView);
         items = new ArrayList<SequenceControllerModel>();
         TextView text = (TextView) findViewById(R.id.training_name);
+        text.setTextSize(MainActivity.font_size);
         ArrayList<Integer> baseValues;
         if (workout == null) {
             baseValues = new ArrayList<Integer>(Arrays.asList(30, 30, 30, 10, 4, 1, 60));
@@ -50,13 +51,13 @@ public class SequenceActivity extends AppCompatActivity{
             text.setText(workout.getWorkout_name());
         }
 
-        items.add(new SequenceControllerModel(R.drawable.directions_walk, "Подготовка", baseValues.get(0)));
-        items.add(new SequenceControllerModel(R.drawable.directions_run, "Разминка", baseValues.get(1)));
-        items.add(new SequenceControllerModel(R.drawable.access_alarm, "Работа", baseValues.get(2)));
-        items.add(new SequenceControllerModel(R.drawable.accessibility, "Отдых", baseValues.get(3)));
-        items.add(new SequenceControllerModel(R.drawable.repeat, "Циклы", baseValues.get(4)));
-        items.add(new SequenceControllerModel(R.drawable.update, "Сеты", baseValues.get(5)));
-        items.add(new SequenceControllerModel(R.drawable.weekend, "Отдых между сетами", baseValues.get(6)));
+        items.add(new SequenceControllerModel(R.drawable.directions_walk, getString(R.string.preparation), baseValues.get(0)));
+        items.add(new SequenceControllerModel(R.drawable.directions_run, getString(R.string.stretch), baseValues.get(1)));
+        items.add(new SequenceControllerModel(R.drawable.access_alarm, getString(R.string.work), baseValues.get(2)));
+        items.add(new SequenceControllerModel(R.drawable.accessibility, getString(R.string.rest), baseValues.get(3)));
+        items.add(new SequenceControllerModel(R.drawable.repeat, getString(R.string.cycle), baseValues.get(4)));
+        items.add(new SequenceControllerModel(R.drawable.update, getString(R.string.sets), baseValues.get(5)));
+        items.add(new SequenceControllerModel(R.drawable.weekend, getString(R.string.sets_rest), baseValues.get(6)));
 
         listView.setAdapter(new SequenceAdapter(items, workout, this, ""));
     }
@@ -115,5 +116,11 @@ public class SequenceActivity extends AppCompatActivity{
 
         intent.putExtra("SEQUENCE", workout);
         startActivityForResult(intent, 1);
+    }
+
+    public void startTimer(View view) {
+        Intent intent = new Intent(this, TimerActivity.class);
+        intent.putExtra("SEQUENCE", workout);
+        startActivity(intent);
     }
 }
