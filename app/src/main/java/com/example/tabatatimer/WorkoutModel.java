@@ -130,8 +130,15 @@ public class WorkoutModel implements Serializable {
         for (Integer time: workout_order_time) {
             whole_time += time;
         }
-        return "Whole training time: " + whole_time + "\nCycle number: " + cycles_number
-                + "\nSets number: " + sets_number;
+        if (MainActivity.language.equals("en")) {
+            return "Whole training time: " + whole_time + "\nCycle number: " + cycles_number
+                    + "\nSets number: " + sets_number;
+        }
+        else if (MainActivity.language.equals("ru")) {
+            return "Полное время тренировки: " + whole_time + "\nКоличество циклов: " + cycles_number
+                    + "\nКоличество сетов: " + sets_number;
+        }
+        return "";
     }
 
     public void updateDescription() {
