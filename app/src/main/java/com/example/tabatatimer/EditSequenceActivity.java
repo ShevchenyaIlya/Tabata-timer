@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -34,6 +35,9 @@ public class EditSequenceActivity extends AppCompatActivity {
 
         EditText editText = (EditText) findViewById(R.id.editPageTextView);
         editText.setText(workout.getWorkout_name());
+        editText.setTextSize(MainActivity.font_size);
+        TextView textView = (TextView) findViewById(R.id.training_name);
+        textView.setTextSize(MainActivity.font_size);
 
         items_order = new ArrayList<SequenceControllerModel>();
 

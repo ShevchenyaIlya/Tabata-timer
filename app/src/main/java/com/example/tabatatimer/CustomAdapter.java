@@ -1,6 +1,8 @@
 package com.example.tabatatimer;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -10,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -56,30 +59,29 @@ public class CustomAdapter extends BaseAdapter implements ListAdapter {
             view = inflater.inflate(R.layout.program_list_item, null);
         }
 
-        WorkoutModel obj = items.get(position);
+        final WorkoutModel obj = items.get(position);
         if (obj != null) {
             TextView title = (TextView) view.findViewById(R.id.titleTextView);
             TextView description = (TextView) view.findViewById(R.id.descriptionTextView);
+            title.setTextSize(MainActivity.font_size);
+            description.setTextSize(MainActivity.font_size);
+
             if (title != null) {
                 title.setText(obj.getWorkout_name());
             }
             if (description != null) {
                 description.setText(obj.getDescription());
             }
-//            view.setBackgroundColor(obj.getColor());
             GradientDrawable backgroundGradient = (GradientDrawable)view.getBackground();
             backgroundGradient.setColor(obj.getColor());
-//            Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
-//            String[] spinnerItem = new String[] {"Title", "Color"};
-//            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, spinnerItem);;
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            spinner.setAdapter(adapter);
 
             ImageButton startProgram = (ImageButton) view.findViewById(R.id.startProgram);
             startProgram.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Intent intent = new Intent(context, TimerActivity.class);
+                    intent.putExtra("SEQUENCE", obj);
+                    context.startActivity(intent);
                 }
             });
 
@@ -125,6 +127,33 @@ public class CustomAdapter extends BaseAdapter implements ListAdapter {
                             }
                         });
                         colorPicker.show();
+                        return true;
+                    case R.id.thirt_item:
+                        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+                        alert.setTitle("Change workout title");
+                        alert.setMessage("Workout title: " + getItem(position).getWorkout_name());
+
+                        final EditText input = new EditText(context);
+                        alert.setView(input);
+
+                        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                WorkoutModel item = getItem(position);
+                                item.setWorkout_name(input.getText().toString());
+                                DatabaseHelper dbHelper = new DatabaseHelper(context);
+                                item.updateWorkout(dbHelper);
+                                notifyDataSetChanged();
+                            }
+                        });
+
+                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+
+                            }
+                        });
+
+                        alert.show();
                         return true;
                     default:
                         return false;
