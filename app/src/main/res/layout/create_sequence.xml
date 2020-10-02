@@ -63,7 +63,8 @@
             android:textStyle="bold"
             android:background="@color/blue"
             android:layout_gravity="center"
-            android:text="@string/start" />
+            android:text="@string/start"
+            android:onClick="startTimer"/>
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
