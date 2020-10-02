@@ -61,18 +61,7 @@ android {
     }
 }
 
-def getGitCommand = { ->
-    def stdout = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'log','--date=local','--name-status','--after="2018.07.19"'
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
-}
 
-task prinGitLog{
-    println getGitCommand()
-}
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.2.0'
