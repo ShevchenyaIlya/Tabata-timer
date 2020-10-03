@@ -66,7 +66,7 @@
     <string name="font_summary">Choose value of application font size</string>
     <string name="large_text">Large text</string>
     <string name="medium_text">Medium text</string>
-    <string name="small_text">Small_text</string>
+    <string name="small_text">Small text</string>
     <string name="training_summary">Whole training time</string>
     <string name="cycle_number">Cycle number</string>
     <string name="sets_number">Sets number</string>
