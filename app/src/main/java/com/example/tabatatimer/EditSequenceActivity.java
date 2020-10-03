@@ -34,15 +34,15 @@ public class EditSequenceActivity extends AppCompatActivity {
 
 
         EditText editText = (EditText) findViewById(R.id.editPageTextView);
-        editText.setText(workout.getWorkout_name());
+        editText.setText(workout.getWorkoutName());
         editText.setTextSize(MainActivity.font_size);
         TextView textView = (TextView) findViewById(R.id.training_name);
         textView.setTextSize(MainActivity.font_size);
 
         items_order = new ArrayList<SequenceControllerModel>();
 
-        ArrayList<String> fazes = workout.getWorkout_order();
-        ArrayList<Integer> fazes_time = workout.getWorkout_order_time();
+        ArrayList<String> fazes = workout.getWorkoutOrder();
+        ArrayList<Integer> fazes_time = workout.getWorkoutOrderTime();
         for(int i = 0; i < fazes.size(); i++) {
             int imageId = 0;
             String faze = fazes.get(i);
@@ -68,10 +68,10 @@ public class EditSequenceActivity extends AppCompatActivity {
         super.onBackPressed();
     }
     public void saveChangesButton(View view) {
-        ArrayList<String> fazes = workout.getWorkout_order();
-        ArrayList<Integer> fazes_time = workout.getWorkout_order_time();
+        ArrayList<String> fazes = workout.getWorkoutOrder();
+        ArrayList<Integer> fazes_time = workout.getWorkoutOrderTime();
         EditText editText = (EditText)findViewById(R.id.editPageTextView);
-        workout.setWorkout_name(editText.getText().toString());
+        workout.setWorkoutName(editText.getText().toString());
         workout.updateDescription();
 //        workout.setColor();
 
@@ -80,11 +80,17 @@ public class EditSequenceActivity extends AppCompatActivity {
             fazes_time.set(i, items_order.get(i).getBaseValue());
         }
 
-        if (workout.getId() != 0)
-            workout.updateWorkout(dbHelper);
+        if (SequenceActivity.isCreated)
+            workout.updateWorkout(MainActivity.workoutDatabase);
         else {
-            boolean result = workout.saveWorkout(dbHelper);
-            Toast.makeText(this, "Sequence with such name exist", Toast.LENGTH_SHORT).show();
+            WorkoutModel row = MainActivity.workoutDatabase.workoutDao().getByName(workout.getWorkoutName());
+            if (row == null) {
+                workout.saveWorkout(MainActivity.workoutDatabase);
+                Toast.makeText(this, "Sequence created successfully", Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(this, "Sequence with such name exist", Toast.LENGTH_LONG).show();
+            }
         }
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

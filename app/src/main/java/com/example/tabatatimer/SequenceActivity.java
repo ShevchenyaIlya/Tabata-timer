@@ -23,6 +23,7 @@ public class SequenceActivity extends AppCompatActivity{
 
     WorkoutModel workout;
     ArrayList<SequenceControllerModel> items;
+    public static boolean isCreated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +44,14 @@ public class SequenceActivity extends AppCompatActivity{
         ArrayList<Integer> baseValues;
         if (workout == null) {
             baseValues = new ArrayList<Integer>(Arrays.asList(30, 30, 30, 10, 4, 1, 60));
-            workout = new WorkoutModel(0, "Base name", 30, 30, 30, 10, 4, 1, 60, "", "", R.color.listItemColor);
+            isCreated = false;
+            workout = new WorkoutModel().createWorkoutModel(MainActivity.workoutDatabase.workoutDao().getCount(), "Base name", 30, 30, 30, 10, 4, 1, 60, "", "", R.color.listItemColor);
         } else {
-            baseValues = new ArrayList<Integer>(Arrays.asList(workout.getPreparation_time(), workout.getStretch_time(),
-                    workout.getWork_time(), workout.getRelax_time(), workout.getCycles_number(),
-                    workout.getSets_number(), workout.getRelax_after_set_time()));
-            text.setText(workout.getWorkout_name());
+            baseValues = new ArrayList<Integer>(Arrays.asList(workout.getPreparationTime(), workout.getStretchTime(),
+                    workout.getWorkTime(), workout.getRelaxTime(), workout.getCyclesNumber(),
+                    workout.getSetsNumber(), workout.getRelaxAfterSetTime()));
+            text.setText(workout.getWorkoutName());
+            isCreated = true;
         }
 
         items.add(new SequenceControllerModel(R.drawable.directions_walk, getString(R.string.preparation), baseValues.get(0)));
@@ -105,13 +108,13 @@ public class SequenceActivity extends AppCompatActivity{
 
     public void toEditSequencePage(View view) {
         Intent intent = new Intent(this, EditSequenceActivity.class);
-        workout.setPreparation_time(items.get(0).getBaseValue());
-        workout.setStretch_time(items.get(1).getBaseValue());
-        workout.setWork_time(items.get(2).getBaseValue());
-        workout.setRelax_time(items.get(3).getBaseValue());
-        workout.setCycles_number(items.get(4).getBaseValue());
-        workout.setSets_number(items.get(5).getBaseValue());
-        workout.setRelax_after_set_time(items.get(6).getBaseValue());
+        workout.setPreparationTime(items.get(0).getBaseValue());
+        workout.setStretchTime(items.get(1).getBaseValue());
+        workout.setWorkTime(items.get(2).getBaseValue());
+        workout.setRelaxTime(items.get(3).getBaseValue());
+        workout.setCyclesNumber(items.get(4).getBaseValue());
+        workout.setSetsNumber(items.get(5).getBaseValue());
+        workout.setRelaxAfterSetTime(items.get(6).getBaseValue());
         workout.updateWorkingOrder();
 
         intent.putExtra("SEQUENCE", workout);

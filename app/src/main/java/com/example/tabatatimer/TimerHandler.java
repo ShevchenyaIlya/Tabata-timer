@@ -49,28 +49,28 @@ public class TimerHandler implements Serializable {
         this.pi = pi;
 
         sound = MediaPlayer.create(this.context, R.raw.censor_beep);
-        timer.setText(workout.getWorkout_order_time().get(stage).toString());
-        int cycle_value = workout.getCycles_number() * workout.getSets_number();
+        timer.setText(workout.getWorkoutOrderTime().get(stage).toString());
+        int cycle_value = workout.getCyclesNumber() * workout.getSetsNumber();
         cycleNumber.setText(String.valueOf(currentCycle) + "/" + cycle_value);
         array = new ArrayList<String>();
-        int stages_number = workout.getWorkout_order().size();
+        int stages_number = workout.getWorkoutOrder().size();
         for (int i = 0; i < stages_number; i++)
         {
-            array.add(String.valueOf(i + 1) + ". " + workout.getWorkout_order().get(i));
+            array.add(String.valueOf(i + 1) + ". " + workout.getWorkoutOrder().get(i));
         }
 
         ArrayAdapter arrayAdapter = new ArrayAdapter(context, android.R.layout.simple_list_item_1, array);
         listView.setAdapter(arrayAdapter);
         listView.setBackgroundColor(workout.getColor());
         int time = 0;
-        for (Integer seconds: workout.getWorkout_order_time()) {
+        for (Integer seconds: workout.getWorkoutOrderTime()) {
             time += seconds;
         }
         int min = time / 60;
         int seconds = time - min * 60;
         holeTime.setText(String.valueOf(min) + ":" + seconds);
 
-        timeLeftInMilliseconds = (workout.getWorkout_order_time().get(stage) + 1) * 1000;
+        timeLeftInMilliseconds = (workout.getWorkoutOrderTime().get(stage) + 1) * 1000;
         startTimer();
     }
 
@@ -86,14 +86,14 @@ public class TimerHandler implements Serializable {
     public void restartTimer() {
         stopTimer();
         stage++;
-        if (stage != workout.getWorkout_order_time().size()) {
+        if (stage != workout.getWorkoutOrderTime().size()) {
             array.remove(0);
             ArrayAdapter arrayAdapter = new ArrayAdapter(context, android.R.layout.simple_list_item_1, array);
             listView.setAdapter(arrayAdapter);
-            if (workout.getWorkout_order().get(stage).equals("Work")) {
+            if (workout.getWorkoutOrder().get(stage).equals("Work")) {
                 updateStageTextView();
             }
-            timeLeftInMilliseconds = (workout.getWorkout_order_time().get(stage) + 1) * 1000;
+            timeLeftInMilliseconds = (workout.getWorkoutOrderTime().get(stage) + 1) * 1000;
             startTimer();
         }
         else {
@@ -118,7 +118,7 @@ public class TimerHandler implements Serializable {
     }
 
     public void updateStageTextView() {
-        int cycle_value = workout.getCycles_number() * workout.getSets_number();
+        int cycle_value = workout.getCyclesNumber() * workout.getSetsNumber();
         currentCycle++;
         if (currentCycle < cycle_value + 1) {
             cycleNumber.setText(String.valueOf(currentCycle) + "/" + cycle_value);
@@ -178,31 +178,31 @@ public class TimerHandler implements Serializable {
             stage--;
             stopTimer();
             array = new ArrayList<String>();
-            int stages_number = workout.getWorkout_order().size();
+            int stages_number = workout.getWorkoutOrder().size();
             for (int i = stage; i < stages_number; i++)
             {
-                array.add(String.valueOf(i + 1) + ". " + workout.getWorkout_order().get(i));
+                array.add(String.valueOf(i + 1) + ". " + workout.getWorkoutOrder().get(i));
             }
             ArrayAdapter arrayAdapter = new ArrayAdapter(context, android.R.layout.simple_list_item_1, array);
             listView.setAdapter(arrayAdapter);
 
-            if (workout.getWorkout_order().get(stage + 1).equals("Work")) {
-                int cycle_value = workout.getCycles_number() * workout.getSets_number();
+            if (workout.getWorkoutOrder().get(stage + 1).equals("Work")) {
+                int cycle_value = workout.getCyclesNumber() * workout.getSetsNumber();
                 currentCycle--;
                 if (currentCycle < cycle_value + 1) {
                     cycleNumber.setText(String.valueOf(currentCycle) + "/" + cycle_value);
                 }
             }
-            timeLeftInMilliseconds = (workout.getWorkout_order_time().get(stage) + 1) * 1000;
+            timeLeftInMilliseconds = (workout.getWorkoutOrderTime().get(stage) + 1) * 1000;
             startTimer();
         }
     }
 
     public void nextStage() {
-        if(stage < workout.getWorkout_order().size() - 1){
+        if(stage < workout.getWorkoutOrder().size() - 1){
             restartTimer();
         }
-        else if (stage == workout.getWorkout_order().size() - 1) {
+        else if (stage == workout.getWorkoutOrder().size() - 1) {
             stopTimer();
             stage++;
             timer.setText("0");

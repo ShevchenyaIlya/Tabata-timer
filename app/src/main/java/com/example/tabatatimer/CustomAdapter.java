@@ -22,15 +22,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class CustomAdapter extends BaseAdapter implements ListAdapter {
 
     private Context context;
-    private ArrayList<WorkoutModel> items = new ArrayList<WorkoutModel>();
+    private List<WorkoutModel> items = new ArrayList<WorkoutModel>();
 
-    public CustomAdapter(ArrayList<WorkoutModel> items, Context context) {
+    public CustomAdapter(List<WorkoutModel> items, Context context) {
         this.context = context;
         this.items = items;
     }
@@ -67,7 +68,7 @@ public class CustomAdapter extends BaseAdapter implements ListAdapter {
             description.setTextSize(MainActivity.font_size);
 
             if (title != null) {
-                title.setText(obj.getWorkout_name());
+                title.setText(obj.getWorkoutName());
             }
             if (description != null) {
                 description.setText(obj.getDescription());
@@ -106,7 +107,7 @@ public class CustomAdapter extends BaseAdapter implements ListAdapter {
                 switch (menuItem.getItemId()) {
                     case R.id.first_item:
                         DatabaseHelper dbHelper = new DatabaseHelper(context);
-                        getItem(position).deleteWorkout(dbHelper);
+                        getItem(position).deleteWorkout(MainActivity.workoutDatabase);
                         items.remove(position);
                         notifyDataSetChanged();
                         return true;
@@ -122,7 +123,7 @@ public class CustomAdapter extends BaseAdapter implements ListAdapter {
                             public void onOk(AmbilWarnaDialog dialog, int color) {
                                 obj.setColor(color);
                                 DatabaseHelper dbHelper = new DatabaseHelper(context);
-                                obj.updateWorkout(dbHelper);
+                                obj.updateWorkout(MainActivity.workoutDatabase);
                                 notifyDataSetChanged();
                             }
                         });
@@ -132,7 +133,7 @@ public class CustomAdapter extends BaseAdapter implements ListAdapter {
                         AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
                         alert.setTitle("Change workout title");
-                        alert.setMessage("Workout title: " + getItem(position).getWorkout_name());
+                        alert.setMessage("Workout title: " + getItem(position).getWorkoutName());
 
                         final EditText input = new EditText(context);
                         alert.setView(input);
@@ -140,9 +141,9 @@ public class CustomAdapter extends BaseAdapter implements ListAdapter {
                         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 WorkoutModel item = getItem(position);
-                                item.setWorkout_name(input.getText().toString());
+                                item.setWorkoutName(input.getText().toString());
                                 DatabaseHelper dbHelper = new DatabaseHelper(context);
-                                item.updateWorkout(dbHelper);
+                                item.updateWorkout(MainActivity.workoutDatabase);
                                 notifyDataSetChanged();
                             }
                         });

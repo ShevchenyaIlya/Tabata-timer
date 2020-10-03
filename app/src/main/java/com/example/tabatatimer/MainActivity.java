@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.PreferenceManager;
+import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +40,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     DatabaseHelper dbHelper;
+    public static WorkoutDatabase workoutDatabase;
     public static float font_size;
     public static String language;
 
@@ -64,16 +66,19 @@ public class MainActivity extends AppCompatActivity {
 
         TextView textView = (TextView) findViewById(R.id.trainings);
         textView.setTextSize(font_size);
-        dbHelper = new DatabaseHelper(this);
 
-        Cursor cursor = dbHelper.getAllData();
+        workoutDatabase = Room.databaseBuilder(getApplicationContext(), WorkoutDatabase.class, "workoutdb").allowMainThreadQueries().build();
 
-        final ArrayList<WorkoutModel> trainings = new ArrayList<WorkoutModel>();
-        while (cursor.moveToNext()) {
-            trainings.add(new WorkoutModel(cursor.getInt(0), cursor.getString(1), cursor.getInt(2),
-                    cursor.getInt(3), cursor.getInt(4), cursor.getInt(5), cursor.getInt(6),
-                    cursor.getInt(7), cursor.getInt(8), cursor.getString(9), cursor.getString(10), cursor.getInt(11)));
-        }
+//        dbHelper = new DatabaseHelper(this);
+
+//        Cursor cursor = dbHelper.getAllData();
+
+        final List<WorkoutModel> trainings = workoutDatabase.workoutDao().getAll();
+//        while (cursor.moveToNext()) {
+//            trainings.add(new WorkoutModel(cursor.getInt(0), cursor.getString(1), cursor.getInt(2),
+//                    cursor.getInt(3), cursor.getInt(4), cursor.getInt(5), cursor.getInt(6),
+//                    cursor.getInt(7), cursor.getInt(8), cursor.getString(9), cursor.getString(10), cursor.getInt(11)));
+//        }
         for (int i = 0; i < trainings.size(); i++) {
             WorkoutModel workoutModel = trainings.get(i);
             workoutModel.updateDescription();
@@ -86,13 +91,30 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(view.getContext(), "Opening " + trainings.get(i).getWorkout_name(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Opening " + trainings.get(i).getWorkoutName(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(view.getContext(), SequenceActivity.class);
                 intent.putExtra("SEQUENCE", trainings.get(i));
                 startActivity(intent);
             }
         });
 
+
+//        Workout workout = new Workout();
+//        workout.setColor(trainings.get(0).getColor());
+//        workout.setWorkoutName(trainings.get(0).getWorkout_name());
+//        workout.setCyclesNumber(trainings.get(0).getCycles_number());
+//        workout.setSetsNumber(trainings.get(0).getSets_number());
+//        workout.setPreparationTime(trainings.get(0).getPreparation_time());
+//        workout.setStretchTime(trainings.get(0).getStretch_time());
+//        workout.setWorkTime(trainings.get(0).getWork_time());
+//        workout.setRelaxTime(trainings.get(0).getRelax_time());
+//        workout.setRelaxAfterSet(trainings.get(0).getRelax_after_set_time());
+//        workout.setId(trainings.get(0).getId() + 5);
+//        workout.workout_order = trainings.get(0).getWorkout_order();
+//        workout.workout_order_time = trainings.get(0).getWorkout_order_time();
+//        workoutDatabase.workoutDao().insert(workout);
+//
+//        List<Workout> train = workoutDatabase.workoutDao().getAll();
     }
 
     public void floatingButtonClick(View view) {
