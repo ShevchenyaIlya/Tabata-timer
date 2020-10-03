@@ -37,4 +37,7 @@ public interface WorkoutDao {
 
     @Delete
     void delete(WorkoutModel workout);
+
+    @Query("DELETE FROM workouts")
+    void dropTable();
 }
