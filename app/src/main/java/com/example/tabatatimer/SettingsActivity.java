@@ -48,8 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
             button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    DatabaseHelper databaseHelper = new DatabaseHelper(getContext());
-                    databaseHelper.dropTable();
+                    MainActivity.workoutDatabase.workoutDao().dropTable();
                     return true;
                 }
             });
