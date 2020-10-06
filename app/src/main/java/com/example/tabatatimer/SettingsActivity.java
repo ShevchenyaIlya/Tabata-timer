@@ -37,7 +37,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
         public static final String PREF_STYLE = "app_theme";
-        public static final String PREF_LANGUAGE = "language";
         private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
 
         @Override
@@ -75,6 +74,7 @@ public class SettingsActivity extends AppCompatActivity {
                         Configuration config = getResources().getConfiguration();
                         config.locale = locale;
                         getResources().updateConfiguration(config, getResources().getDisplayMetrics());
+                        SplashScreen.language = language;
                         FragmentTransaction tr = getFragmentManager().beginTransaction();
                         tr.replace(R.id.settings, new SettingsFragment());
                         tr.commit();
@@ -83,6 +83,7 @@ public class SettingsActivity extends AppCompatActivity {
                     if (s.equals("font")) {
                         ListPreference listPreference = (ListPreference) findPreference(s);
                         float value = Float.parseFloat(listPreference.getValue());
+                        SplashScreen.font_size = value;
                     }
                 }
             };

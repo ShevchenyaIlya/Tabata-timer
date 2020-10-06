@@ -32,15 +32,16 @@ public class TimerService extends Service {
     public int onStartCommand(final Intent intent, int flags, int startId) {
 
         running = true;
-        timeLeftInMilliseconds = intent.getLongExtra("TIME", 0);
+        timeLeftInMilliseconds = TimerHandler.timeLeftInMilliseconds;
         pi = intent.getParcelableExtra("PENDING_INTENT");
         countDownTimer = new CountDownTimer(timeLeftInMilliseconds, 1000) {
             @Override
             public void onTick(long l) {
                 timeLeftInMilliseconds = l;
                 if (timeLeftInMilliseconds / 1000 == 2)
-                    TimerHandler.playSound();
-                TimerHandler.setText(timeLeftInMilliseconds);
+                    TimerActivity.playSound();
+                TimerActivity.setText(timeLeftInMilliseconds);
+                TimerHandler.timeLeftInMilliseconds = timeLeftInMilliseconds;
             }
 
             @Override

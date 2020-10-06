@@ -41,10 +41,6 @@ public class WorkoutModel implements Serializable {
     @ColumnInfo(name = "relax_after_set_time")
     private int relaxAfterSetTime;
 
-    @ColumnInfo(name = "workout_order")
-    @TypeConverters(TypeConverterStrings.class)
-    private ArrayList<String> workoutOrder;
-
     @ColumnInfo(name = "workout_order_time")
     @TypeConverters(TypeConverterInteger.class)
     private ArrayList<Integer> workoutOrderTime;
@@ -55,7 +51,7 @@ public class WorkoutModel implements Serializable {
     private int color;
 
     // If id is equal to 0, then this object doesn't saved in database
-    public WorkoutModel createWorkoutModel(int id, String workout_name, int preparation_time, int stretch_time, int work_time, int relax_time, int cycles_number, int sets_number, int relax_after_set_time, String workout_order_value, String workout_order_time_value, int color) {
+    public WorkoutModel createWorkoutModel(int id, String workout_name, int preparation_time, int stretch_time, int work_time, int relax_time, int cycles_number, int sets_number, int relax_after_set_time, String workout_order_time_value, int color) {
         this.id = id;
         this.workoutName = workout_name;
         this.preparationTime = preparation_time;
@@ -67,11 +63,10 @@ public class WorkoutModel implements Serializable {
         this.relaxAfterSetTime = relax_after_set_time;
         this.color = color;
 
-        if (workout_order_time_value.equals("") && workout_order_value.equals("")) {
+        if (workout_order_time_value.equals("")) {
             createWorkingOrder();
         }
         else {
-            workoutOrder = new ArrayList<String>(Arrays.asList(Converter.convertStringToArray(workout_order_value)));
             workoutOrderTime = new ArrayList<Integer>(Arrays.asList(Converter.convertStringToIntegerArray(workout_order_time_value)));
         }
 
@@ -80,21 +75,15 @@ public class WorkoutModel implements Serializable {
     }
 
     private void createWorkingOrder() {
-        workoutOrder = new ArrayList<String>();
         workoutOrderTime = new ArrayList<Integer>();
-        workoutOrder.add("Preparation");
         workoutOrderTime.add(preparationTime);
-        workoutOrder.add("Stretch");
         workoutOrderTime.add(stretchTime);
         for (int i = 0; i < setsNumber; i++) {
             for (int j = 0; j < cyclesNumber; j++) {
-                workoutOrder.add("Work");
                 workoutOrderTime.add(workTime);
-                workoutOrder.add("Rest");
                 workoutOrderTime.add(relaxTime);
 
             }
-            workoutOrder.add("SetsRest");
             workoutOrderTime.add(relaxAfterSetTime);
         }
     }
@@ -102,23 +91,6 @@ public class WorkoutModel implements Serializable {
     public void updateWorkingOrder() {
         createWorkingOrder();
     }
-
-
-//    public boolean saveWorkout(DatabaseHelper dbHelper) {
-//        return dbHelper.insertData(this.workoutName, this.preparation_time, this.stretch_time,
-//                this.work_time, this.relax_time, this.cycles_number, this.sets_number, this.relax_after_set_time, Converter.convertArrayToString(workout_order.toArray(new String[0])), Converter.convertIntArrayToString(workout_order_time.toArray(new Integer[0])), color);
-//    }
-//
-//    public int deleteWorkout(DatabaseHelper dbHelper) {
-//
-//        return dbHelper.deleteData(String.valueOf(this.id));
-//    }
-//
-//    public void updateWorkout(DatabaseHelper dbHelper) {
-//        dbHelper.updateData(this.id, this.workout_name, this.preparation_time, this.stretch_time,
-//                this.work_time, this.relax_time, this.cycles_number, this.sets_number, this.relax_after_set_time,
-//                Converter.convertArrayToString(workout_order.toArray(new String[0])), Converter.convertIntArrayToString(workout_order_time.toArray(new Integer[0])), color);
-//    }
 
     public void saveWorkout(WorkoutDatabase workoutDatabase) {
         workoutDatabase.workoutDao().insert(this);
@@ -137,11 +109,11 @@ public class WorkoutModel implements Serializable {
         for (Integer time: workoutOrderTime) {
             whole_time += time;
         }
-        if (MainActivity.language.equals("en")) {
+        if (SplashScreen.language.equals("en")) {
             return "Whole training time: " + whole_time + "\nCycle number: " + cyclesNumber
                     + "\nSets number: " + setsNumber;
         }
-        else if (MainActivity.language.equals("ru")) {
+        else if (SplashScreen.language.equals("ru")) {
             return "Полное время тренировки: " + whole_time + "\nКоличество циклов: " + cyclesNumber
                     + "\nКоличество сетов: " + setsNumber;
         }
@@ -220,16 +192,26 @@ public class WorkoutModel implements Serializable {
         return relaxAfterSetTime;
     }
 
+    public void setBasicValues(int id) {
+        this.id = id;
+        this.workoutName = "Base name";
+        this.preparationTime = 25;
+        this.stretchTime = 25;
+        this.workTime = 20;
+        this.relaxTime = 10;
+        this.cyclesNumber = 4;
+        this.setsNumber = 1;
+        this.relaxAfterSetTime = 40;
+        this.color = R.color.colorPrimary;
+        createWorkingOrder();
+    }
+
+    public ArrayList<Integer> getBasicValues() {
+        return new ArrayList<Integer>(Arrays.asList(25, 25, 20, 10, 4, 1, 40));
+    }
+
     public void setRelaxAfterSetTime(int relaxAfterSetTime) {
         this.relaxAfterSetTime = relaxAfterSetTime;
-    }
-
-    public ArrayList<String> getWorkoutOrder() {
-        return workoutOrder;
-    }
-
-    public void setWorkoutOrder(ArrayList<String> workoutOrder) {
-        this.workoutOrder = workoutOrder;
     }
 
     public ArrayList<Integer> getWorkoutOrderTime() {
@@ -238,6 +220,22 @@ public class WorkoutModel implements Serializable {
 
     public void setWorkoutOrderTime(ArrayList<Integer> workoutOrderTime) {
         this.workoutOrderTime = workoutOrderTime;
+    }
+
+    public ArrayList<String> getWorkoutOrder() {
+        ArrayList<String> workoutOrder = new ArrayList<String>();
+
+        workoutOrder.add("Preparation");
+        workoutOrder.add("Stretch");
+        for (int i = 0; i < setsNumber; i++) {
+            for (int j = 0; j < cyclesNumber; j++) {
+                workoutOrder.add("Work");
+                workoutOrder.add("Rest");
+            }
+            workoutOrder.add("Rest between sets");
+        }
+
+        return workoutOrder;
     }
 
     public String getDescription() {

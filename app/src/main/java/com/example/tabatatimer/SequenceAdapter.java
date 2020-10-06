@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class SequenceAdapter extends ArrayAdapter<SequenceControllerModel> implements View.OnClickListener{
+public class SequenceAdapter extends ArrayAdapter<SequenceControllerModel> {
 
     private Context context;
     private ArrayList<SequenceControllerModel> rowElements = new ArrayList<SequenceControllerModel>();
@@ -46,10 +46,10 @@ public class SequenceAdapter extends ArrayAdapter<SequenceControllerModel> imple
 
         if (rowData != null) {
             TextView title = (TextView) view.findViewById(R.id.sequenceItemTitle);
-            title.setTextSize(MainActivity.font_size);
+            title.setTextSize(SplashScreen.font_size);
             ImageView image = (ImageView) view.findViewById(R.id.sequenceItemImage);
             final EditText value = (EditText) view.findViewById(R.id.sequenceItemValue);
-            value.setTextSize(MainActivity.font_size);
+            value.setTextSize(SplashScreen.font_size);
 
             if (title != null) {
                 title.setText(rowData.getTitle());
@@ -99,29 +99,7 @@ public class SequenceAdapter extends ArrayAdapter<SequenceControllerModel> imple
                     }
                 }
             });
-//            Spinner spinner = (Spinner) view.findViewById(R.id.spinner);
-//            String[] spinnerItem = new String[] {"Title", "Color"};
-//            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, spinnerItem);;
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//            spinner.setAdapter(adapter);
         }
-
-
-//        ImageButton startProgram = (ImageButton) view.findViewById(R.id.startProgram);
-//        startProgram.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                LinearLayout layout = (LinearLayout)view.getParent();
-//                LinearLayout parent = (LinearLayout)layout.getParent();
-//                GradientDrawable bgShape = (GradientDrawable)parent.getBackground();
-//                bgShape.setColor(Color.RED);
-//            }
-//        });
         return view;
-    }
-
-    @Override
-    public void onClick(View view) {
-        //Toast.makeText(view.getContext(), String.valueOf(view.getId()), Toast.LENGTH_LONG).show();
     }
 }

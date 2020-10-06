@@ -64,8 +64,8 @@ public class CustomAdapter extends BaseAdapter implements ListAdapter {
         if (obj != null) {
             TextView title = (TextView) view.findViewById(R.id.titleTextView);
             TextView description = (TextView) view.findViewById(R.id.descriptionTextView);
-            title.setTextSize(MainActivity.font_size);
-            description.setTextSize(MainActivity.font_size);
+            title.setTextSize(SplashScreen.font_size);
+            description.setTextSize(SplashScreen.font_size);
 
             if (title != null) {
                 title.setText(obj.getWorkoutName());
@@ -106,7 +106,6 @@ public class CustomAdapter extends BaseAdapter implements ListAdapter {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.first_item:
-                        DatabaseHelper dbHelper = new DatabaseHelper(context);
                         getItem(position).deleteWorkout(MainActivity.workoutDatabase);
                         items.remove(position);
                         notifyDataSetChanged();

@@ -1,5 +1,6 @@
 package com.example.tabatatimer;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -23,6 +24,7 @@ public class SequenceActivity extends AppCompatActivity{
 
     WorkoutModel workout;
     ArrayList<SequenceControllerModel> items;
+    TextView text;
     public static boolean isCreated = false;
 
     @Override
@@ -32,37 +34,55 @@ public class SequenceActivity extends AppCompatActivity{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         workout = (WorkoutModel) getIntent().getSerializableExtra("SEQUENCE");
+        ListView listView = (ListView) findViewById(R.id.sequenceListView);
+
+        if (savedInstanceState != null) {
+            items = (ArrayList<SequenceControllerModel>) savedInstanceState.getSerializable("value");
+        }
+        else {
+            items = new ArrayList<SequenceControllerModel>();
+            ArrayList<Integer> baseValues;
+            if (workout == null) {
+                workout = new WorkoutModel();
+                baseValues = workout.getBasicValues();
+                workout.setBasicValues(MainActivity.workoutDatabase.workoutDao().getCount());
+                isCreated = false;
+            } else {
+                baseValues = new ArrayList<Integer>(Arrays.asList(workout.getPreparationTime(), workout.getStretchTime(),
+                        workout.getWorkTime(), workout.getRelaxTime(), workout.getCyclesNumber(),
+                        workout.getSetsNumber(), workout.getRelaxAfterSetTime()));
+                text.setText(workout.getWorkoutName());
+                isCreated = true;
+            }
+            items.add(new SequenceControllerModel(R.drawable.directions_walk, getString(R.string.preparation), baseValues.get(0)));
+            items.add(new SequenceControllerModel(R.drawable.directions_run, getString(R.string.stretch), baseValues.get(1)));
+            items.add(new SequenceControllerModel(R.drawable.access_alarm, getString(R.string.work), baseValues.get(2)));
+            items.add(new SequenceControllerModel(R.drawable.accessibility, getString(R.string.rest), baseValues.get(3)));
+            items.add(new SequenceControllerModel(R.drawable.repeat, getString(R.string.cycle), baseValues.get(4)));
+            items.add(new SequenceControllerModel(R.drawable.update, getString(R.string.sets), baseValues.get(5)));
+            items.add(new SequenceControllerModel(R.drawable.weekend, getString(R.string.sets_rest), baseValues.get(6)));
+
+        }
+        listView.setAdapter(new SequenceAdapter(items, workout, this, ""));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ListView listView = (ListView) findViewById(R.id.sequenceListView);
-        items = new ArrayList<SequenceControllerModel>();
-        TextView text = (TextView) findViewById(R.id.training_name);
-        text.setTextSize(MainActivity.font_size);
-        ArrayList<Integer> baseValues;
-        if (workout == null) {
-            baseValues = new ArrayList<Integer>(Arrays.asList(30, 30, 30, 10, 4, 1, 60));
-            isCreated = false;
-            workout = new WorkoutModel().createWorkoutModel(MainActivity.workoutDatabase.workoutDao().getCount(), "Base name", 30, 30, 30, 10, 4, 1, 60, "", "", R.color.listItemColor);
-        } else {
-            baseValues = new ArrayList<Integer>(Arrays.asList(workout.getPreparationTime(), workout.getStretchTime(),
-                    workout.getWorkTime(), workout.getRelaxTime(), workout.getCyclesNumber(),
-                    workout.getSetsNumber(), workout.getRelaxAfterSetTime()));
-            text.setText(workout.getWorkoutName());
-            isCreated = true;
-        }
+        text = (TextView) findViewById(R.id.training_name);
+        text.setTextSize(SplashScreen.font_size);
+    }
 
-        items.add(new SequenceControllerModel(R.drawable.directions_walk, getString(R.string.preparation), baseValues.get(0)));
-        items.add(new SequenceControllerModel(R.drawable.directions_run, getString(R.string.stretch), baseValues.get(1)));
-        items.add(new SequenceControllerModel(R.drawable.access_alarm, getString(R.string.work), baseValues.get(2)));
-        items.add(new SequenceControllerModel(R.drawable.accessibility, getString(R.string.rest), baseValues.get(3)));
-        items.add(new SequenceControllerModel(R.drawable.repeat, getString(R.string.cycle), baseValues.get(4)));
-        items.add(new SequenceControllerModel(R.drawable.update, getString(R.string.sets), baseValues.get(5)));
-        items.add(new SequenceControllerModel(R.drawable.weekend, getString(R.string.sets_rest), baseValues.get(6)));
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putSerializable("value", items);
+        super.onSaveInstanceState(outState);
+    }
 
-        listView.setAdapter(new SequenceAdapter(items, workout, this, ""));
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        items = (ArrayList<SequenceControllerModel>) savedInstanceState.getSerializable("value");
     }
 
     @Override
@@ -73,33 +93,6 @@ public class SequenceActivity extends AppCompatActivity{
         }
         workout = (WorkoutModel) data.getSerializableExtra("SEQUENCE");
     }
-
-//    private void setTimeDialog(int itemIndex) {
-//        final LinearLayout linearLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.set_time_dialog, null);
-//        NumberPicker numberPickerMinutes = (NumberPicker) linearLayout.findViewById(R.id.numberPicker1);
-//        NumberPicker numberPickerSeconds = (NumberPicker) linearLayout.findViewById(R.id.numberPicker2);
-//
-//        numberPickerMinutes.setMinValue(0);
-//        numberPickerMinutes.setMaxValue(30);
-//        numberPickerMinutes.setValue(1);
-//        numberPickerSeconds.setMinValue(0);
-//        numberPickerSeconds.setMaxValue(59);
-//        final AlertDialog builder = new AlertDialog.Builder(this)
-//                .setPositiveButton("Submit", null)
-//                .setNegativeButton("Cancel", null)
-//                .setView(linearLayout)
-//                .setCancelable(false)
-//                .create();
-//        builder.show();
-//
-//        //Setting up OnClickListener on positive button of AlertDialog
-//        builder.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // Code on submit
-//            }
-//        });
-//    }
 
     public void toListOfSequences(View view) {
         Intent intent = new Intent(this, MainActivity.class);
