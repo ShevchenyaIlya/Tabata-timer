@@ -35,6 +35,7 @@ public class SequenceActivity extends AppCompatActivity{
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         workout = (WorkoutModel) getIntent().getSerializableExtra("SEQUENCE");
         ListView listView = (ListView) findViewById(R.id.sequenceListView);
+        text = (TextView) findViewById(R.id.training_name);
 
         if (savedInstanceState != null) {
             items = (ArrayList<SequenceControllerModel>) savedInstanceState.getSerializable("value");
