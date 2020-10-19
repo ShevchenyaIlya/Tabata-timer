@@ -27,7 +27,7 @@ public class EditSequenceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_sequence);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(false);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
+        workout = (WorkoutModel) getIntent().getSerializableExtra("SEQUENCE");
 
         ListView listView = (ListView) findViewById(R.id.editSequenceListView);
         EditText editText = (EditText) findViewById(R.id.editPageTextView);
